@@ -238,6 +238,12 @@ Eigen::Vector3cd DajStruje(Eigen::Vector3cd Eg, Eigen::Matrix3cd Zg, Eigen::Matr
     return (Zg + Zl + Zp).inverse() * Eg;
 }
 
+void PolarPrint(Eigen::VectorXcd x){
+    for (int i=0;i<x.rows();i++){
+        std::cout<<"("<<abs(x(i))<<" <"<<arg(x(i)) *(180./PI)<<")"<<std::endl;
+    }
+}
+
 int main(){
     // Primjer zadatka s c2 za provjeru tačnosti solvera
     double l = 80, f = 50;
