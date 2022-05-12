@@ -206,12 +206,37 @@ Eigen::VectorXcd NetworkSolver(std::complex<double> E, std::complex<double> Zg1,
 
 }
 
+Eigen::Vector3cd DajNaponV1(Eigen::VectorXcd x){
+    return Eigen::Vector3cd {x(0),x(1),x(2)};
+}
 
+Eigen::Vector3cd DajNaponV2(Eigen::VectorXcd x){
+    return Eigen::Vector3cd {x(3),x(4),x(5)};
+}
+
+Eigen::Vector3cd DajStrujuI12(Eigen::VectorXcd x){
+    return Eigen::Vector3cd {x(6),x(7),x(8)};
+}
+
+Eigen::Vector3cd DajStrujuI21(Eigen::VectorXcd x){
+    return Eigen::Vector3cd {x(9),x(10),x(11)};
+}
+
+Eigen::Vector3cd DajStrujuI10(Eigen::VectorXcd x){
+    return Eigen::Vector3cd {x(12),x(13),x(14)};
+}
+
+Eigen::Vector3cd DajStrujuI20(Eigen::VectorXcd x){
+    return Eigen::Vector3cd {x(15),x(16),x(17)};
+}
+
+Eigen::Vector3cd DajStrujuIp(Eigen::VectorXcd x){
+    return Eigen::Vector3cd {x(18),x(19),x(20)};
+}
 
 Eigen::Vector3cd DajStruje(Eigen::Vector3cd Eg, Eigen::Matrix3cd Zg, Eigen::Matrix3cd Zl, Eigen::Matrix3cd Zp) {
     return (Zg + Zl + Zp).inverse() * Eg;
 }
-
 
 int main(){
     // Primjer zadatka s c2 za provjeru tačnosti solvera
