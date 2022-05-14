@@ -142,6 +142,28 @@ Eigen::MatrixXcd LineModel(double c0, double c1, double r0, double r1, double L0
     return Yl;
 }
 
+// Funkcija koja vraca matricu admitansi cetveropola Yii
+Eigen::MatrixXcd LineModel_ii(double c0, double c1, double r0, double r1, double L0, double L1, double l, double f) {
+    std::complex<double> Ysh0(0, 2*PI*f*c0*l), Ysh1(0, 2*PI*f*c1*l);
+    std::complex<double> Zs0(r0*l, 2*PI*f*L0*l), Zs1(r1*l, 2*PI*f*L1*l);
+
+    Eigen::Matrix3cd Yl11 = T.inverse()*(Eigen::Matrix3cd {{1./Zs0 + Ysh0/2., 0, 0},
+                                                           {0, 1./Zs1 + Ysh1/2., 0},
+                                                           {0, 0, 1./Zs1 + Ysh1/2.},})*T;
+    return Yl11;
+}
+
+// Funkcija koja vraca matricu admitansi cetveropola Yij
+Eigen::MatrixXcd LineModel_ij(double c0, double c1, double r0, double r1, double L0, double L1, double l, double f) {
+    std::complex<double> Ysh0(0, 2*PI*f*c0*l), Ysh1(0, 2*PI*f*c1*l);
+    std::complex<double> Zs0(r0*l, 2*PI*f*L0*l), Zs1(r1*l, 2*PI*f*L1*l);
+
+    Eigen::Matrix3cd Yl12 = T.inverse()*(Eigen::Matrix3cd {{-1./Zs0, 0, 0},
+                                                            {0, -1./Zs1, 0},
+                                                            {0, 0, -1./Zs1}})*T;
+    return Yl12;
+}
+
 //Funkcija za modeliranje kondenzatorske baterije kada su kapacitivnosti iste
 Eigen::Matrix3cd CondenserBatteryModel(double c, double f){
     std::complex<double> Z(0, -1./2*PI*f*c);
