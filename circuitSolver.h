@@ -238,10 +238,28 @@ Eigen::Vector3cd DajStruje(Eigen::Vector3cd Eg, Eigen::Matrix3cd Zg, Eigen::Matr
     return (Zg + Zl + Zp).inverse() * Eg;
 }
 
+// Ispis u Polarnim Koordinatama
 void PolarPrint(Eigen::VectorXcd x){
     for (int i=0;i<x.rows();i++){
         std::cout<<"("<<abs(x(i))<<" <"<<arg(x(i)) *(180./PI)<<")"<<std::endl;
     }
+}
+
+//Dijagonalizacija vektora 3x1
+Eigen::Matrix3cd Diagonalize(Eigen::Vector3cd v){
+    return Eigen::Matrix3cd{{v(0), 0, 0},
+                            {0, v(1), 0},
+                            {0, 0,  v(2)}, };
+}
+
+// Funkcija za racunanje snage
+Eigen::Vector3cd Snaga(Eigen::Vector3cd V, Eigen::Vector3cd I){
+    return Diagonalize(V) * I.conjugate();
+}
+
+//Funkcija za racunanje ukupne snage iz Vektora 3x1
+std::complex<double> UkupnaSnaga(Eigen::Vector3cd V){
+    return V.sum();
 }
 
 int main(){
