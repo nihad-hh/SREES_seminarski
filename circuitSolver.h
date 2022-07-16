@@ -263,10 +263,6 @@ Eigen::Vector3cd DajStrujuIp(Eigen::VectorXcd x){
     return Eigen::Vector3cd {x(18),x(19),x(20)};
 }
 
-Eigen::Vector3cd DajStruje(Eigen::Vector3cd Eg, Eigen::Matrix3cd Zg, Eigen::Matrix3cd Zl, Eigen::Matrix3cd Zp) {
-    return (Zg + Zl + Zp).inverse() * Eg;
-}
-
 // Ispis u Polarnim Koordinatama
 void PolarPrint(Eigen::VectorXcd x){
     for (int i=0;i<x.rows();i++){
