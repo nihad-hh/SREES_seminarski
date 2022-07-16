@@ -14,6 +14,7 @@ using namespace std::complex_literals;
 const double PI = 4 * std::atan(1);
 // operator a = exp(i*2*pi/3)
 const std::complex<double> a = std::exp(2i * PI/3.);
+extern bool inverzija;
 
 // matrica T
 Eigen::Matrix3cd T  {{1/3., 1/3., 1/3.},
@@ -88,7 +89,7 @@ Eigen::Matrix3cd unesi_Z_zvijezde_sa_uzemljenjem(std::complex<double> Zp, std::c
 }
 
 // Pojedinacni unos impedansi potrosaca za zvijezdu sa izolovanim cvorom (Zp1, Zp2, Zp3)
-Eigen::Matrix3cd unesi_Z_zvijezde_izolovane(std::complex<double> Zp1, std::complex<double> Zp2, std::complex<double> Zp3) {
+Eigen::Matrix3cd unesi_Y_zvijezde_izolovane(std::complex<double> Zp1, std::complex<double> Zp2, std::complex<double> Zp3) {
     std::complex<double> Yp1 = 1. / Zp1;
     std::complex<double> Yp2 = 1. / Zp2;
     std::complex<double> Yp3 = 1. / Zp3;
@@ -97,23 +98,24 @@ Eigen::Matrix3cd unesi_Z_zvijezde_izolovane(std::complex<double> Zp1, std::compl
         -Yp2 * Yp1, Yp2* Yp1 + Yp2 * Yp3, -Yp2 * Yp3,
         -Yp3 * Yp1, -Yp3 * Yp2, Yp3* Yp1 + Yp3 * Yp2;
     m = 1. / (Yp1 + Yp2 + Yp3) * m;
-    return m.inverse();
+
+    return m;
 }
 
 // Unos impedansi potrosaca za zvijezdu sa izolovanim cvorom (Zp)
-Eigen::Matrix3cd unesi_Z_zvijezde_izolovane(std::complex<double> Zp) {
-    return unesi_Z_zvijezde_izolovane(Zp, Zp, Zp);
+Eigen::Matrix3cd unesi_Y_zvijezde_izolovane(std::complex<double> Zp) {
+    return unesi_Y_zvijezde_izolovane(Zp, Zp, Zp);
 }
 
 // Pojedinacni unos impedansi potrosaca za trokut
-Eigen::Matrix3cd unesi_Z_trokut(std::complex<double> Zp1, std::complex<double> Zp2, std::complex<double> Zp3) {
-    Eigen::Matrix3cd m = 3 * unesi_Z_zvijezde_izolovane(Zp1, Zp2, Zp3);
+Eigen::Matrix3cd unesi_Y_trokut(std::complex<double> Zp1, std::complex<double> Zp2, std::complex<double> Zp3) {
+    Eigen::Matrix3cd m = 3 * unesi_Y_zvijezde_izolovane(Zp1, Zp2, Zp3);
     return m;
 }
 
 // Unos impedansi potrosaca za trokut
-Eigen::Matrix3cd unesi_Z_trokut(std::complex<double> Zp) {
-    Eigen::Matrix3cd m = unesi_Z_trokut(Zp, Zp, Zp);
+Eigen::Matrix3cd unesi_Y_trokut(std::complex<double> Zp) {
+    Eigen::Matrix3cd m = unesi_Y_trokut(Zp, Zp, Zp);
     return m;
 }
 
@@ -167,7 +169,7 @@ Eigen::MatrixXcd LineModel_ij(double c0, double c1, double r0, double r1, double
 //Funkcija za modeliranje kondenzatorske baterije kada su kapacitivnosti iste
 Eigen::Matrix3cd CondenserBatteryModel(double c, double f){
     std::complex<double> Z(0, -1./2*PI*f*c);
-    return unesi_Z_trokut(Z);
+    return unesi_Y_trokut(Z);
 }
 
 //Funkcija za modeliranje kondenzatorske baterije u slucaju razlicitih kapacitivnosti
@@ -201,7 +203,12 @@ Eigen::VectorXcd NetworkSolver(std::complex<double> E, std::complex<double> Zg1,
     Eigen::Matrix3cd Yc = CondenserBatteryModel(C1, C2, C3, f);
 
     // modeliranje potrosaca
-    Eigen::Matrix3cd Yp = Zp.inverse();
+    Eigen::Matrix3cd Yp;
+
+    if(inverzija == true)
+        Yp = Zp.inverse();
+    else
+        Yp = Zp;
 
     // RJESAVANJE MREZE
     Eigen::Matrix3cd zeroM = Eigen::Matrix3cd::Zero(3,3); // matrica nula
