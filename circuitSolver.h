@@ -69,11 +69,6 @@ Eigen::Matrix3cd unesi_Z_lin(std::complex<double> Zl1, std::complex<double> Zl2,
     return m;
 }
 
-// Unos impedansi linija ( Zl= Zl1 = Zl2 = Zl3)
-Eigen::Matrix3cd unesi_Z_lin(std::complex<double> Zl) {
-    return unesi_Z_lin(Zl, Zl, Zl);
-}
-
 // Pojedinačni unos impedansi potrosaca za zvijezdu sa uzemljenjem preko impedanse i bez impedanse ( Zp1, Zp2, Zp3, Zn )
 Eigen::Matrix3cd unesi_Z_zvijezde_sa_uzemljenjem(std::complex<double> Zp1, std::complex<double> Zp2, std::complex<double> Zp3, std::complex<double> Zn = 0) {
     Eigen::Matrix3cd m;
